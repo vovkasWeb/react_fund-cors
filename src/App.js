@@ -7,20 +7,12 @@ import PostItem from "./components/PostItem";
 import PostList from "./components/PostList";
 import MyButton from "./components/UI/button/MyButton";
 import MyInput from "./components/UI/input/MyInput";
-
+import PostForm from "./components/PostForm";
 import "./styles/App.css";
 
 function App() {
-	const [post,setPost] =useState({title:'',body: ''});
-	
+  const bodyInputRef = useRef();
 
-	const bodyInputRef = useRef();
-	const addNewPost = (e)=>{
-		e.preventDefault();
-		
-	setPosts([...posts,{...post,id:Date.now()}]);
-	setPost({title:'',body: ''});
-	}
   const [posts, setPosts] = useState([
     { id: 1, title: "JavaSript", body: "Desription" },
     { id: 2, title: "Java", body: "D887" },
@@ -33,16 +25,24 @@ function App() {
     { id: 3, title: "Java2", body: "D887" },
   ]);
 
+  const createPost = (newPost) => {
+    setPosts([...posts, newPost]);
+  };
+
+  const removePost = (post) => {
+    setPosts(posts.filter((p) => p.id !== post.id));
+  };
+
   return (
     <div className="App">
-     
-
-      <form>
-			<MyInput type='text' value={post.title} onChange={e=>setPost({...post, title: e.target.value})} placeholder="Назвагие поста"/>
-			<MyInput type='text' value={post.body} onChange={e=>setPost({...post, body: e.target.value})} placeholder="Описание поста"/>
-			<MyButton onClick={addNewPost}>Coздать пост</MyButton>
-		</form>
-		<PostList posts={posts} title="Cписок постов 1"/>
+      <PostForm create={createPost} />
+		{posts.length?
+      <PostList
+		remove={removePost}
+        posts={posts}
+        title="Cписок постов 1"
+      />
+		:<h1 style={{textAlign:"center"}}>Посты не найдены!</h1>}
     </div>
   );
 }
